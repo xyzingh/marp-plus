@@ -1,6 +1,7 @@
 clsMarkdown = require './classes/mds_markdown'
 ipc         = require('electron').ipcRenderer
 Path        = require 'path'
+fullpage    = require 'fullpage.js'
 
 resolvePathFromMarp = (path = './') -> Path.resolve(__dirname, '../', path)
 
@@ -14,19 +15,6 @@ document.addEventListener 'DOMContentLoaded', ->
         $(@).attr(target, resolvePathFromMarp($(@).attr(target)))
 
     Markdown = new clsMarkdown({ afterRender: clsMarkdown.generateAfterRender($) })
-
-    themes = {}
-    themes.current = -> $('#theme-css').attr('href')
-    themes.default = themes.current()
-    themes.apply = (path = null) ->
-      toApply = resolvePathFromMarp(path || themes.default)
-
-      if toApply isnt themes.current()
-        $('#theme-css').attr('href', toApply)
-        setTimeout applyScreenSize, 20
-
-        return toApply.match(/([^\/]+)\.css$/)[1]
-      false
 
     setStyle = (identifier, css) ->
       id  = "mds-#{identifier}Style"
@@ -44,63 +32,25 @@ document.addEventListener 'DOMContentLoaded', ->
       size.ratio = size.w / size.h
       size
 
-    applySlideSize = (width, height) ->
-      setStyle 'slideSize',
-        """
-        body {
-          --slide-width: #{width || 'inherit'};
-          --slide-height: #{height || 'inherit'};
-        }
-        """
-      applyScreenSize()
-
-    getScreenSize = ->
-      size =
-        w: document.documentElement.clientWidth
-        h: document.documentElement.clientHeight
-
-      previewMargin = +getCSSvar '--preview-margin'
-      size.ratio = (size.w - previewMargin * 2) / (size.h - previewMargin * 2)
-      size
-
-    applyScreenSize = ->
-      size = getScreenSize()
-      setStyle 'screenSize', "body { --screen-width: #{size.w}; --screen-height: #{size.h}; }"
-      $('#container').toggleClass 'height-base', size.ratio > getSlideSize().ratio
-
     applyCurrentPage = (page) ->
-      setStyle 'currentPage',
-        """
-        @media not print {
-          body.slide-view.screen .slide_wrapper:not(:nth-of-type(#{page})) {
-            width: 0 !important;
-            height: 0 !important;
-            border: none !important;
-            box-shadow: none !important;
-          }
-        }
-        """
+      @fp.moveTo(1, page - 1)
 
     render = (md) ->
-      applySlideSize md.settings.getGlobal('width'), md.settings.getGlobal('height')
-      md.changedTheme = themes.apply md.settings.getGlobal('theme')
-
       $('#markdown').html(md.parsed)
+
+      @fp.destroy() if @fp
+
+      @fp = new fullpage '#container',
+        css3: true
+        scrollingSpeed: 300
+        sectionSelector: '#markdown'
+        slideSelector: '.slide_wrapper'
+        controlArrows: false
+        loopHorizontal: false
+        licenseKey: 'OPEN-SOURCE-GPLV3-LICENSE'
 
       ipc.sendToHost 'rendered', md
       ipc.sendToHost 'rulerChanged', md.rulers if md.rulerChanged
-      ipc.sendToHost 'themeChanged', md.changedTheme if md.changedTheme
-
-    sendPdfOptions = (opts) ->
-      slideSize = getSlideSize()
-
-      opts.exportSize =
-        width:  Math.floor(slideSize.w * 25400 / 96)
-        height: Math.floor(slideSize.h * 25400 / 96)
-
-      # Load slide resources
-      $('body').addClass 'to-pdf'
-      setTimeout (-> ipc.sendToHost 'responsePdfOptions', opts), 0
 
     setImageDirectory = (dir) -> $('head > base').attr('href', dir || './')
 
@@ -108,13 +58,15 @@ document.addEventListener 'DOMContentLoaded', ->
     ipc.on 'currentPage', (e, page) -> applyCurrentPage page
     ipc.on 'setClass', (e, classes) -> $('body').attr 'class', classes
     ipc.on 'setImageDirectory', (e, dir) -> setImageDirectory(dir)
-    ipc.on 'requestPdfOptions', (e, opts) -> sendPdfOptions(opts || {})
-    ipc.on 'unfreeze', -> $('body').removeClass('to-pdf')
 
     # Initialize
     $(document).on 'click', 'a', (e) ->
       e.preventDefault()
       ipc.sendToHost 'linkTo', $(e.currentTarget).attr('href')
 
-    $(window).resize (e) -> applyScreenSize()
-    applyScreenSize()
+    $(document)
+      .on 'dragover',  -> false
+      .on 'dragleave', -> false
+      .on 'dragend',   -> false
+      .on 'drop',      -> false
+      .on 'keyup', (e) => @fp.moveSlideRight() if e.which == 32

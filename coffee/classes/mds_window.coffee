@@ -21,6 +21,7 @@ module.exports = class MdsWindow
     width:  global.marp.config.get 'windowPosition.width'
     height: global.marp.config.get 'windowPosition.height'
     icon:   Path.join(__dirname, '/../../images/marp.png')
+    titleBarStyle: 'hidden'
 
   browserWindow: null
   path: null
@@ -35,7 +36,7 @@ module.exports = class MdsWindow
 
   constructor: (fileOpts = {}, @options = {}) ->
     @path = fileOpts?.path || null
-    @viewMode = global.marp.config.get('viewMode')
+    @viewMode = 'view'
 
     @browserWindow = do =>
       bw = new BrowserWindow extend(true, {}, MdsWindow.defOptions(), @options)
@@ -196,17 +197,6 @@ module.exports = class MdsWindow
 
     forceClose: -> @browserWindow.destroy()
 
-    exportPdfDialog: ->
-      return if @freeze
-      dialog.showSaveDialog @browserWindow,
-        title: 'Export to PDF...'
-        defaultPath: @getCurrentFile(),
-        filters: [{ name: 'PDF file', extensions: ['pdf'] }]
-      , (fname) =>
-        return unless fname?
-        @freeze = true
-        @send 'publishPdf', fname
-
     initializeState: (filePath = null, changed = false) ->
       @path = filePath
       @trigger 'setChangedStatus', changed
@@ -229,10 +219,6 @@ module.exports = class MdsWindow
       @menu.states.viewMode = mode
       @menu.updateMenu()
 
-    themeChanged: (theme) ->
-      @menu.states.theme = theme
-      @menu.updateMenu()
-
     unfreeze: ->
       @freeze = false
       @send 'unfreezed'
@@ -246,11 +232,11 @@ module.exports = class MdsWindow
       @browserWindow?.setTitle "#{@options?.title || 'Marp'} - #{@getShortPath()}#{if @changed then ' *' else ''}"
 
   getShortPath: =>
-    return '(untitled)' unless @path?
+    return '未命名' unless @path?
     @path.replace(/\\/g, '/').replace(/.*\//, '')
 
   getCurrentFile: => 
-    return 'untitled' unless @path?
+    return '未命名' unless @path?
     @path.replace(/\\/g, '/').replace(/.*\//, '').replace(/\.[^/.]+$/, "")
 
   updateResourceState: =>

@@ -54,8 +54,6 @@ class EditorStates
       @currentPage = page
       @preview.send 'currentPage', @currentPage if @previewInitialized
 
-    $('#page-indicator').text "Page #{@currentPage} / #{@rulers.length + 1}"
-
   initializePreview: =>
     $(@preview)
       .on 'dom-ready', =>
@@ -139,7 +137,6 @@ do ->
   editorStates = new EditorStates(
     CodeMirror.fromTextArea($('#editor')[0],
       mode: 'gfm'
-      theme: 'marp'
       lineWrapping: true
       lineNumbers: false
       dragDrop: false
@@ -148,9 +145,6 @@ do ->
     ),
     $('#preview')[0]
   )
-
-  # View modes
-  $('.viewmode-btn[data-viewmode]').click -> MdsRenderer.sendToMain('viewMode', $(this).attr('data-viewmode'))
 
   # File D&D
   $(document)
@@ -202,38 +196,8 @@ do ->
     MdsRenderer.sendToMain 'setConfig', 'splitterPosition', draggingSplitPosition if draggingSplitPosition?
   , false
 
-  responsePdfOpts = null
-
   # Events
   MdsRenderer
-    .on 'publishPdf', (fname) ->
-      editorStates.codeMirror.getInputField().blur()
-      $('body').addClass 'exporting-pdf'
-
-      editorStates.preview.send 'requestPdfOptions', { filename: fname }
-
-    .on 'responsePdfOptions', (opts) ->
-      # Wait loading resources
-      startPublish = ->
-        if loadingState is 'loading'
-          setTimeout startPublish, 250
-        else
-          editorStates.preview.printToPDF
-            marginsType: 1
-            pageSize: opts.exportSize
-            printBackground: true
-          , (err, data) ->
-            unless err
-              MdsRenderer.sendToMain 'writeFile', opts.filename, data, { finalized: 'unfreeze' }
-            else
-              MdsRenderer.sendToMain 'unfreeze'
-
-      setTimeout startPublish, 500
-
-    .on 'unfreezed', ->
-      editorStates.preview.send 'unfreeze'
-      $('body').removeClass 'exporting-pdf'
-
     .on 'loadText', (buffer) ->
       editorStates._lockChangedStatus = true
       editorStates.codeMirror.setValue buffer
@@ -248,16 +212,12 @@ do ->
 
     .on 'viewMode', (mode) ->
       switch mode
-        when 'markdown'
-          editorStates.preview.send 'setClass', ''
-        when 'screen'
-          editorStates.preview.send 'setClass', 'slide-view screen'
-        when 'list'
-          editorStates.preview.send 'setClass', 'slide-view list'
-
-      $('#preview-modes').removeClass('disabled')
-      $('.viewmode-btn[data-viewmode]').removeClass('active')
-        .filter("[data-viewmode='#{mode}']").addClass('active')
+        when 'view'
+          $('.window').removeClass 'play'
+          editorStates.preview.send 'setClass', 'slide-view view'
+        when 'play'
+          $('.window').addClass 'play'
+          editorStates.preview.send 'setClass', 'slide-view play'
 
     .on 'editCommand', (command) -> editorStates.codeMirror.execCommand(command)
 
@@ -269,8 +229,6 @@ do ->
 
     .on 'setEditorConfig', (editorConfig) -> setEditorConfig editorConfig
     .on 'setSplitter', (spliiterPos) -> setSplitter spliiterPos
-    .on 'setTheme', (theme) -> editorStates.updateGlobalSetting '$theme', theme
-    .on 'themeChanged', (theme) -> MdsRenderer.sendToMain 'themeChanged', theme
     .on 'resourceState', (state) -> loadingState = state
 
   # Initialize

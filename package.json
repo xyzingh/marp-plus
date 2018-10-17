@@ -1,19 +1,19 @@
 {
-  "name": "marp",
-  "version": "0.0.13",
+  "name": "marp-plus",
+  "version": "1.0.0",
   "private": true,
   "description": "Markdown Presentation Writer (Powered by Electron)",
-  "productName": "Marp",
+  "productName": "Marp+",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yhatt/marp"
+    "url": "https://github.com/rikumi/marp"
   },
   "main": "main.js",
   "scripts": {
     "start": "gulp compile && electron . --development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Yuki Hattori",
+  "author": "Rikumi Yu",
   "license": "MIT",
   "devDependencies": {
     "coffee-script": "^1.10.0",
@@ -41,6 +41,7 @@
   "dependencies": {
     "codemirror": "^5.11.0",
     "extend": "^3.0.0",
+    "fullpage.js": "^3.0.3",
     "github-markdown-css": "^2.4.1",
     "highlight.js": "^9.1.0",
     "iconv-lite": "^0.4.13",

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Marp</title>
+    <title>Marp+</title>
     <script>window.jQuery = window.$ = require('jquery');</script>
 
     <link rel="stylesheet" href="node_modules/photon/dist/css/photon.css" />
@@ -12,6 +12,7 @@
 
   <body>
     <div class="window">
+      <div class="draggable"></div>
       <div class="window-content">
         <div class="pane-group">
           <div class="pane markdown">
@@ -24,28 +25,6 @@
             <webview id="preview" autosize="on" preload="./js/slide.js" src="slide.html" blinkFeatures="CSSVariables"></webview>
           </div>
         </div>
-      </div>
-      <footer class="toolbar toolbar-footer">
-        <div class="toolbar-actions">
-          <span id="page-indicator"></span>
-          <div class="btn-group pull-right disabled" id="preview-modes">
-            <button class="btn btn-default viewmode-btn" id="preview-mode-markdown" data-viewmode="markdown" title="Markdown">
-              <span class="icon icon-pencil"></span>
-            </button>
-            <button class="btn btn-default viewmode-btn" id="preview-mode-screen" data-viewmode="screen" title="1:1 Slide">
-              <span class="icon icon-monitor"></span>
-            </button>
-            <button class="btn btn-default viewmode-btn" id="preview-mode-list" data-viewmode="list" title="Slide List">
-              <span class="icon icon-doc-text"></span>
-            </button>
-          </div>
-        </div>
-      </footer>
-    </div>
-    <div id="exporting-indicator">
-      <div id="exporting-indicator-modal">
-        <img src="./images/throbbers/blue.svg" class="throbber" />
-        Exporting slide PDF...
       </div>
     </div>
   </body>

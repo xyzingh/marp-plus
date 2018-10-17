@@ -11,12 +11,10 @@ class MdsConfig
 
   @initialConfig:
     editor:
-      fontFamily: 'Consolas, monaco, monospace'
       fontSize: '14px'
     fileHistory: []
     fileHistoryMax: 8
     splitterPosition: 0.5
-    viewMode: 'screen'
     windowPosition:
       x: undefined
       y: undefined

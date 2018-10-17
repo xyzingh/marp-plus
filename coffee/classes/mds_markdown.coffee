@@ -7,7 +7,7 @@ MdsMdSetting = require './mds_md_setting'
 {exist}      = require './mds_file'
 
 module.exports = class MdsMarkdown
-  @slideTagOpen:  (page) -> '<div class="slide_wrapper" id="' + page + '"><div class="slide"><div class="slide_bg"></div><div class="slide_inner">'
+  @slideTagOpen:  (page) -> '<div class="slide_wrapper"><div class="slide" id="' + page + '"><div class="slide_inner">'
   @slideTagClose: (page) -> '</div><footer class="slide_footer"></footer><span class="slide_page" data-page="' + page + '">' + page + '</span></div></div>'
 
   @highlighter: (code, lang) ->
@@ -50,21 +50,6 @@ module.exports = class MdsMarkdown
 
       # Sanitize link tag
       mdElm.find('link:not([rel="stylesheet"])').remove()
-
-      mdElm.find('p > img[alt~="bg"]').each ->
-        $t  = $(@)
-        p   = $t.parent()
-        bg  = $t.parents('.slide_wrapper').find('.slide_bg')
-        src = $t[0].src
-        alt = $t.attr('alt')
-        elm = $('<div class="slide_bg_img"></div>').css('backgroundImage', "url(#{src})").attr('data-alt', alt)
-
-        for opt in alt.split(/\s+/)
-          elm.css('backgroundSize', "#{m[1]}%") if m = opt.match(/^(\d+(?:\.\d+)?)%$/)
-
-        elm.appendTo(bg)
-        $t.remove()
-        p.remove() if p.children(':not(br)').length == 0 && /^\s*$/.test(p.text())
 
       mdElm.find('img[alt*="%"]').each ->
         for opt in $(@).attr('alt').split(/\s+/)
