@@ -156,11 +156,10 @@ module.exports = class MdsMainMenu
           ]
         }
         {
-          label: '开发者'
-          visible: @states.development? and !!@states.development
+          label: '开发'
           submenu: [
-            { label: '切换主窗口 DevTools', enabled: @window?, accelerator: 'Alt+Ctrl+I', click: => @window.toggleDevTools() }
-            { label: '切换预览页 DevTools', enabled: @window?, accelerator: 'Alt+Ctrl+Shift+I', click: => @window.mdsWindow.send 'openDevTool' }
+            { label: '切换主窗口 DevTools', enabled: @window?, accelerator: 'Alt+CmdOrCtrl+Shift+I', click: => @window.toggleDevTools() }
+            { label: '切换预览页 DevTools', enabled: @window?, accelerator: 'Alt+CmdOrCtrl+I', click: => @window.mdsWindow.send 'openDevTool' }
           ]
         }
       ]

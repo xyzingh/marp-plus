@@ -11,7 +11,7 @@
   "main": "main.js",
   "scripts": {
     "start": "gulp compile && electron . --development",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "gulp compile && electron-packager . --mac"
   },
   "author": "Rikumi Yu",
   "license": "MIT",
@@ -51,6 +51,7 @@
     "markdown-it-emoji": "^1.1.0",
     "markdown-it-katex": "^2.0.1",
     "markdown-it-mark": "^2.0.0",
+    "mermaid": "^8.0.0-rc.8",
     "path": "^0.12.7",
     "photon": "github:connors/photon",
     "twemoji": "^2.5.1"
