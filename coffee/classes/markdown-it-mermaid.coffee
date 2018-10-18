@@ -7,9 +7,6 @@ mermaidChart = (code) ->
   el = $("<div id='#{elId}'></div>").text(code)
   init = ->
     el = $('#' + elId)
-    if not el.length
-      setTimeout init, 0
-      return
     try (require 'mermaid').init(undefined, el)
     catch e
       el.find('svg').remove()
