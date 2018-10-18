@@ -12,7 +12,8 @@ mermaidChart = (code) ->
       return
     try (require 'mermaid').init(undefined, el)
     catch e
-      $("<pre>#{e.str}</pre>").appendTo(el)
+      el.find('svg').remove()
+      $("<pre>#{e.message}</pre>").appendTo(el)
   setTimeout init, 0
   return el.prop("outerHTML")
 

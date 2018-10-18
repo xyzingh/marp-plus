@@ -32,7 +32,10 @@ document.addEventListener 'DOMContentLoaded', ->
       size.ratio = size.w / size.h
       size
 
+    lastPage = 1
+
     applyCurrentPage = (page, force = false) ->
+      lastPage = page
       if @fp
         if force
           @fp.silentMoveTo(1, page - 1)
@@ -53,6 +56,8 @@ document.addEventListener 'DOMContentLoaded', ->
         loopHorizontal: false
         # scrollOverflow: true
         licenseKey: 'OPEN-SOURCE-GPLV3-LICENSE'
+      
+      applyCurrentPage lastPage, true
 
       ipc.sendToHost 'rendered', md
       ipc.sendToHost 'rulerChanged', md.rulers if md.rulerChanged
@@ -60,7 +65,7 @@ document.addEventListener 'DOMContentLoaded', ->
     setImageDirectory = (dir) -> $('head > base').attr('href', dir || './')
 
     ipc.on 'render', (e, md) -> render(Markdown.parse(md))
-    ipc.on 'currentPage', (e, page, force) -> applyCurrentPage page, force
+    ipc.on 'currentPage', (e, page) -> applyCurrentPage page
     ipc.on 'setClass', (e, classes) -> $('body').attr 'class', classes
     ipc.on 'setImageDirectory', (e, dir) -> setImageDirectory(dir)
 

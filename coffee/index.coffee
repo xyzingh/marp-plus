@@ -50,7 +50,7 @@ class EditorStates
     for rulerLine in @rulers
       page++ if rulerLine <= lineNumber
 
-    @preview.send('currentPage', page, @currentPage == page) if @previewInitialized
+    @preview.send('currentPage', page) if @previewInitialized
     @currentPage = page
 
   initializePreview: =>
