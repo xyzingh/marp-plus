@@ -42,7 +42,7 @@ class EditorStates
       { label: 'Services', role: 'services', submenu: [], platform: 'darwin' }
     ]
 
-  refreshPage: (rulers) =>
+  refreshPage: (rulers, force = false) =>
     @rulers = rulers if rulers?
     page    = 1
 
@@ -50,9 +50,8 @@ class EditorStates
     for rulerLine in @rulers
       page++ if rulerLine <= lineNumber
 
-    if @currentPage != page
-      @currentPage = page
-      @preview.send 'currentPage', @currentPage if @previewInitialized
+    @preview.send('currentPage', page, @currentPage == page) if @previewInitialized
+    @currentPage = page
 
   initializePreview: =>
     $(@preview)
@@ -101,8 +100,9 @@ class EditorStates
     @codeMirror.on 'change', (cm, chg) =>
       @preview.send 'render', cm.getValue()
       MdsRenderer.sendToMain 'setChangedStatus', true if !@_lockChangedStatus
+      @refreshPage()
 
-    @codeMirror.on 'cursorActivity', (cm) => window.setTimeout (=> @refreshPage()), 5
+    @codeMirror.on 'cursorActivity', => setTimeout (=> @refreshPage()), 0
 
   setImageDirectory: (directory) =>
     if @previewInitialized

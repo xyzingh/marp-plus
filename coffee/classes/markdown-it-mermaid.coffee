@@ -1,30 +1,28 @@
 mermaid = require 'mermaid'
+id = 0
 
 mermaidChart = (code) ->
-  try
-    el = $("<div>#{code}</div>").appendTo($('body'))
+  id += 1
+  elId = 'mermaid-' + id
+  el = $("<div id='#{elId}'></div>").text(code)
+  init = ->
+    el = $('#' + elId)
+    if not el.length
+      setTimeout init, 0
+      return
     try (require 'mermaid').init(undefined, el)
-    html = "<div class='mermaid'>#{el.html()}</div>"
-    el.remove()
-    return html
-  catch e
-    "<pre>#{e.str}</pre>"
+    catch e
+      $("<pre>#{e.str}</pre>").appendTo(el)
+  setTimeout init, 0
+  return el.prop("outerHTML")
 
 module.exports = (md) ->
   md.mermaid = mermaid
-  mermaid.loadPreferences = (preferenceStore) ->
-    mermaidTheme = (preferenceStore.get 'mermaid-theme') or 'default'
-    ganttAxisFormat = (preferenceStore.get 'gantt-axis-format') or '%Y-%m-%d'
-
-    mermaid.initialize
-      theme: mermaidTheme
-      gantt: 
-        axisFormatter:
-          - [ganttAxisFormat, (d) -> d.getDay() == 1]
-
-    return
-      'mermaid-theme': mermaidTheme
-      'gantt-axis-format': ganttAxisFormat
+  mermaid.initialize
+    theme: 'neutral'
+    gantt: 
+      axisFormatter:
+        - ['%Y-%m-%d', (d) -> d.getDay() == 1]
 
   temp = md.renderer.rules.fence.bind md.renderer.rules
   md.renderer.rules.fence = (tokens, idx, options, env, slf) ->

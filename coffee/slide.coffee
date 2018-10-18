@@ -32,8 +32,12 @@ document.addEventListener 'DOMContentLoaded', ->
       size.ratio = size.w / size.h
       size
 
-    applyCurrentPage = (page) ->
-      @fp.moveTo(1, page - 1)
+    applyCurrentPage = (page, force = false) ->
+      if @fp
+        if force
+          @fp.silentMoveTo(1, page - 1)
+        else
+          @fp.moveTo(1, page - 1)
 
     render = (md) ->
       $('#markdown').html(md.parsed)
@@ -47,6 +51,7 @@ document.addEventListener 'DOMContentLoaded', ->
         slideSelector: '.slide_wrapper'
         controlArrows: false
         loopHorizontal: false
+        # scrollOverflow: true
         licenseKey: 'OPEN-SOURCE-GPLV3-LICENSE'
 
       ipc.sendToHost 'rendered', md
@@ -55,7 +60,7 @@ document.addEventListener 'DOMContentLoaded', ->
     setImageDirectory = (dir) -> $('head > base').attr('href', dir || './')
 
     ipc.on 'render', (e, md) -> render(Markdown.parse(md))
-    ipc.on 'currentPage', (e, page) -> applyCurrentPage page
+    ipc.on 'currentPage', (e, page, force) -> applyCurrentPage page, force
     ipc.on 'setClass', (e, classes) -> $('body').attr 'class', classes
     ipc.on 'setImageDirectory', (e, dir) -> setImageDirectory(dir)
 
