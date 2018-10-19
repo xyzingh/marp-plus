@@ -17,13 +17,13 @@ packageOpts =
   version: config.devDependencies['electron']
   prune: false
   overwrite: true
-  'app-bundle-id': 'jp.yhatt.marp'
+  'app-bundle-id': 'io.github.rikumi.marp-plus'
   'app-version': config.version
   'version-string':
     ProductName: config.productName
     InternalName: config.productName
     FileDescription: config.productName
-    CompanyName: 'yhatt'
+    CompanyName: 'rikumi'
     LegalCopyright: ''
     OriginalFilename: "#{config.productName}.exe"
 
@@ -123,7 +123,7 @@ gulp.task 'package:win32', ->
   packageElectron {
     platform: 'win32'
     arch: 'ia32,x64'
-    icon: Path.join(__dirname, 'resources/windows/marp.ico')
+    icon: Path.join(__dirname, 'resources/windows/marp-plus.ico')
   }
 gulp.task 'package:linux', ->
   packageElectron {
@@ -134,7 +134,7 @@ gulp.task 'package:darwin', ->
   packageElectron {
     platform: 'darwin'
     arch: 'x64'
-    icon: Path.join(__dirname, 'resources/darwin/marp.icns')
+    icon: Path.join(__dirname, 'resources/darwin/marp-plus.icns')
   }, ->
     gulp.src ["packages/*-darwin-*/#{config.productName}.app/Contents/Info.plist"], { base: '.' }
       .pipe $.plist
