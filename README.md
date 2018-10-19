@@ -44,5 +44,7 @@ Marp+ 是基于 Marp 二次开发的，面向简体中文用户的加强版 Marp
 
 ### Issue 模板
 Issue 不限语言和模板，可以使用任何人类可理解的语言进行交流。
+
 This project has no limit in issue languages or templates.
+
 Issue には言語やテンプレートの制限がありません。
