@@ -83,7 +83,7 @@ module.exports = class MdsWindow
             type: 'question'
             buttons: ['保存', '不保存', '取消']
             title: 'Marp+'
-            message: "您要保留此文稿“#{@getShortPath()}”吗？"
+            message: "你要保存此文稿“#{@getShortPath()}”吗？"
             cancelId: 2
           , (result) =>
             # Wrap by setTimeout to avoid app termination unexpectedly on Linux.
