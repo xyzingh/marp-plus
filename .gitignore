@@ -50,3 +50,6 @@ docs/Gemfile.lock
 docs/.sass-cache/
 docs/_site/
 docs/_drafts/
+
+**/.DS_Store
+yarn.lock

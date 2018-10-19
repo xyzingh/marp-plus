@@ -1,6 +1,6 @@
 {
   "name": "marp-plus",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "private": true,
   "description": "Markdown Presentation Writer (Powered by Electron)",
   "productName": "Marp+",
@@ -10,8 +10,7 @@
   },
   "main": "main.js",
   "scripts": {
-    "start": "gulp compile && electron . --development",
-    "build": "gulp compile && electron-packager . --mac"
+    "start": "gulp compile && electron . --development"
   },
   "author": "Rikumi Yu",
   "license": "MIT",
@@ -41,7 +40,6 @@
   "dependencies": {
     "codemirror": "^5.11.0",
     "extend": "^3.0.0",
-    "fullpage.js": "^3.0.3",
     "github-markdown-css": "^2.4.1",
     "highlight.js": "^9.1.0",
     "iconv-lite": "^0.4.13",

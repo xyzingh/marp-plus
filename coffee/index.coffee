@@ -219,6 +219,15 @@ do ->
           $('.window').addClass 'play'
           editorStates.preview.send 'setClass', 'slide-view play'
 
+    .on 'increaseFontSize', ->
+      editorStates.preview.send 'increaseFontSize'
+
+    .on 'decreaseFontSize', ->
+      editorStates.preview.send 'decreaseFontSize'
+
+    .on 'originalFontSize', ->
+      editorStates.preview.send 'originalFontSize'
+
     .on 'editCommand', (command) -> editorStates.codeMirror.execCommand(command)
 
     .on 'openDevTool', ->

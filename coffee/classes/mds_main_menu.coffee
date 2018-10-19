@@ -132,11 +132,31 @@ module.exports = class MdsMainMenu
           label: '显示'
           submenu: [
             {
+              label: '放大'
+              enabled: @window?
+              accelerator: 'CmdOrCtrl+='
+              click: => @window.mdsWindow.trigger 'increaseFontSize'
+            }
+            {
+              label: '缩小'
+              enabled: @window?
+              accelerator: 'CmdOrCtrl+-'
+              click: => @window.mdsWindow.trigger 'decreaseFontSize'
+            }
+            {
+              label: '原始大小'
+              enabled: @window?
+              accelerator: 'CmdOrCtrl+0'
+              click: => @window.mdsWindow.trigger 'originalFontSize'
+            }
+            { type: 'separator' }
+            {
               label: '切换编辑栏'
               enabled: @window?
               accelerator: 'Esc'
               click: => @window.mdsWindow.trigger 'viewMode', (if @states.viewMode == 'play' then 'view' else 'play')
             }
+            { type: 'separator' }
             {
               label: '全屏'
               accelerator: do -> if process.platform == 'darwin' then 'Ctrl+Command+F' else 'F11'
