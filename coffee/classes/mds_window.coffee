@@ -81,10 +81,9 @@ module.exports = class MdsWindow
           e.preventDefault()
           dialog.showMessageBox @browserWindow,
             type: 'question'
-            buttons: ['Yes', 'No', 'Cancel']
-            title: 'Marp'
-            message: 'Are you sure?'
-            detail: "#{@getShortPath()} has been modified. Do you want to save the changes?"
+            buttons: ['保存', '不保存', '取消']
+            title: 'Marp+'
+            message: "您要保留此文稿“#{@getShortPath()}”吗？"
             cancelId: 2
           , (result) =>
             # Wrap by setTimeout to avoid app termination unexpectedly on Linux.
@@ -154,10 +153,10 @@ module.exports = class MdsWindow
       return if @freeze or !@path
       return if @changed and dialog.showMessageBox(@browserWindow,
         type: 'question'
-        buttons: ['OK', 'Cancel']
-        title: 'Marp'
-        message: 'Are you sure?'
-        detail: 'You will lose your changes on Marp. Reopen anyway?')
+        buttons: ['不保存并重启', '取消']
+        title: 'Marp+'
+        message: '文件未保存'
+        detail: '重启将丢失所有未保存的内容，是否确定？')
 
       @loadFromFile @path, extend({ override: true }, options)
 
@@ -184,9 +183,9 @@ module.exports = class MdsWindow
           console.log err
           dialog.showMessageBox @browserWindow,
             type: 'error'
-            buttons: ['OK']
-            title: 'Marp'
-            message: "Marp cannot write the file to #{fileName}."
+            buttons: ['好']
+            title: 'Marp+'
+            message: "Marp+ 没有权限写入文件 #{fileName}，请复制内容并自行保存。"
             detail: err.toString()
 
           MdsWindow.appWillQuit = false
