@@ -13,6 +13,7 @@ Path           = require 'path'
 defaultText = """color: #ccc
 font-size: 16px
 text-align: center
+user-select: none
 font-family: 'Avenir Next'
 
 # Marp+
