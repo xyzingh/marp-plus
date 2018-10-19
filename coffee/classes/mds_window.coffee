@@ -10,6 +10,24 @@ jschardet      = require 'jschardet'
 iconv_lite     = require 'iconv-lite'
 Path           = require 'path'
 
+defaultText = """color: #ccc
+font-size: 16px
+text-align: center
+font-family: 'Avenir Next'
+
+# Marp+
+
+在左侧开始编辑
+使用空行加 `---` 分页
+页首可设置当前页 CSS 样式
+使用 `<style>` 设置全局样式
+
+`Esc` 隐藏/显示编辑栏
+`←/→` 预览上一页/下一页
+`⌘+/-` 缩放预览字体
+`⌘0` 恢复预览字体
+"""
+
 module.exports = class MdsWindow
   @appWillQuit: false
 
@@ -67,7 +85,7 @@ module.exports = class MdsWindow
       bw.webContents.on 'did-finish-load', =>
         @_windowLoaded = true
         @send 'setSplitter', global.marp.config.get('splitterPosition')
-        @trigger 'load', fileOpts?.buffer || '', @path
+        @trigger 'load', fileOpts?.buffer || defaultText, @path
 
       bw.once 'ready-to-show', => bw.show()
 
@@ -209,6 +227,8 @@ module.exports = class MdsWindow
       @refreshTitle()
 
     viewMode: (mode) ->
+      unless mode
+        mode = if global.marp.config.get('viewMode') == 'view' then 'play' else 'view'
       global.marp.config.set('viewMode', mode)
       global.marp.config.save()
 

@@ -154,7 +154,7 @@ module.exports = class MdsMainMenu
               label: '切换编辑栏'
               enabled: @window?
               accelerator: 'Esc'
-              click: => @window.mdsWindow.trigger 'viewMode', (if @states.viewMode == 'play' then 'view' else 'play')
+              click: -> # 什么也不做，让 index 层来监听
             }
             { type: 'separator' }
             {

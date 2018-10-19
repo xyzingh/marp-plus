@@ -93,9 +93,9 @@ module.exports = class MdsMarkdown
     @settingsPosition = []
 
     page = 0
-    markdown = markdown.replace /(^|[\r\n]---+[\r\n])((([^\s]+)\s*:\s*([^\{\}\;\r\n]+);?[\r\n])*)/g, (match, $1, $2, ..., offset, string) =>
+    markdown = markdown.replace /(^|[\r\n]---+[\r\n]?)((([^\s]+)\s*:\s*([^\{\}\;\r\n]+);?[\r\n])*)/g, (match, $1, $2, ..., offset, string) =>
       $1 && @_rulers.push((string.substring(0, offset).match(/\r?\n/g) || []).length + 1)
-      rep = ($1 && "#{MdsMarkdown.slideTagClose(page)}#{MdsMarkdown.slideTagOpen(page + 1)}") + "\n<style>#page-#{page + 1}{#{$2.split('\n').join(';')}}</style>\n"
+      rep = ($1 && "#{MdsMarkdown.slideTagClose(page)}#{MdsMarkdown.slideTagOpen(page + 1)}") + "\n<style>#page-#{page + 1}{#{$2.split('\n').join(';')}}</style>\n\n"
       page += 1
       rep
 

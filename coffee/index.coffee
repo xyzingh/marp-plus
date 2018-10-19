@@ -160,6 +160,9 @@ do ->
       else if f.type.startsWith('text') || f.type is ''
         MdsRenderer.sendToMain 'loadFromFile', f.path if f.path?
       false
+    .on 'keyup', (e) -> 
+      if e.which == 27
+        MdsRenderer.sendToMain 'viewMode'
 
   # Splitter
   draggingSplitter      = false
